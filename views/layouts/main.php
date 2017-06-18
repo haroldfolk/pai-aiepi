@@ -37,6 +37,16 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
+            ['label' => 'cadena de frio', 'url' => ['/cadenafrio']],
+            ['label' => 'metododeaplicacion', 'url' => ['/metodoaplicacion']],
+            ['label' => 'vacuna', 'url' => ['/vacuna']],
+            ['label' => 'rango de edad', 'url' => ['/rangoedad']],
+            ['label' => 'refrigerador', 'url' => ['/refrigerador']],
+            ['label' => 'centrodesalud', 'url' => ['/centrodesalud']],
+            ['label' => 'personal', 'url' => ['/personal']],
+            ['label' => 'paciente', 'url' => ['/paciente']],
+            ['label' => 'controlnutricional', 'url' => ['/controlnutricional']],
+            ['label' => 'actodevacunacion', 'url' => ['/actovacunacion']],
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
