@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Cargo;
+use app\models\CentroDeSalud;
 use Yii;
 use app\models\Personal;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,12 +67,15 @@ class PersonalController extends Controller
     public function actionCreate()
     {
         $model = new Personal();
-
+        $centro = CentroDeSalud::find()->all();
+        $listacentro=ArrayHelper::map($centro,'id_centro','nombre');
+        $cargo = Cargo::find()->all();
+        $listacargo=ArrayHelper::map($cargo,'id_cargo','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_personal]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'listacargo'=>$listacargo,'listacentro'=>$listacentro
             ]);
         }
     }
@@ -83,12 +89,15 @@ class PersonalController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $centro = CentroDeSalud::find()->all();
+        $listacentro=ArrayHelper::map($centro,'id_centro','nombre');
+        $cargo = Cargo::find()->all();
+        $listacargo=ArrayHelper::map($cargo,'id_cargo','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_personal]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'model' => $model,'listacargo'=>$listacargo,'listacentro'=>$listacentro
             ]);
         }
     }

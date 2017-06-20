@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Paciente;
 use Yii;
 use app\models\ControlNutricional;
 use yii\data\ActiveDataProvider;
@@ -39,8 +40,11 @@ class ControlnutricionalController extends Controller
             'query' => ControlNutricional::find(),
         ]);
 
+        $dataProviderPaciente = new ActiveDataProvider([
+            'query' => Paciente::find(),
+        ]);
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider, 'dataProviderPaciente' => $dataProviderPaciente,
         ]);
     }
 

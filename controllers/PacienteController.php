@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\CarnetDeVacunacion;
+use app\models\CentroDeSalud;
 use Yii;
 use app\models\Paciente;
-use yii\data\ActiveDataProvider;
+use app\models\PacienteSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,11 +38,11 @@ class PacienteController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Paciente::find(),
-        ]);
+        $searchModel = new PacienteSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -51,8 +54,9 @@ class PacienteController extends Controller
      */
     public function actionView($id)
     {
+        $carnet=CarnetDeVacunacion::findOne(['id_paciente'=>$id]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id),'carnet'=>$carnet->nro_de_carnet
         ]);
     }
 
@@ -64,16 +68,22 @@ class PacienteController extends Controller
     public function actionCreate()
     {
         $model = new Paciente();
-
+        $centro = CentroDeSalud::find()->all();
+        $listacentro=ArrayHelper::map($centro,'id_centro','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $carnet=new CarnetDeVacunacion();
+            $carnet->id_paciente=$model->id_paciente;
+            $carnet->fecha_de_expedicion=date('Y-m-d');
+            $carnet->procedencia=$model->id_centro;
+            $carnet->nro_de_carnet=time();
+            $carnet->save();
             return $this->redirect(['view', 'id' => $model->id_paciente]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'listacentro'=>$listacentro
             ]);
         }
     }
-
     /**
      * Updates an existing Paciente model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -83,12 +93,13 @@ class PacienteController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $centro = CentroDeSalud::find()->all();
+        $listacentro=ArrayHelper::map($centro,'id_centro','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_paciente]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'model' => $model,'listacentro'=>$listacentro
             ]);
         }
     }

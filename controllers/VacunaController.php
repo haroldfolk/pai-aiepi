@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\MetodoAplicacion;
 use Yii;
 use app\models\Vacuna;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,12 +66,13 @@ class VacunaController extends Controller
     public function actionCreate()
     {
         $model = new Vacuna();
-
+        $metodo = MetodoAplicacion::find()->all();
+        $listam=ArrayHelper::map($metodo,'id_metodo','tipo');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_vacuna]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'listam'=>$listam
             ]);
         }
     }
@@ -83,12 +86,13 @@ class VacunaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $metodo = MetodoAplicacion::find()->all();
+        $listam=ArrayHelper::map($metodo,'id_metodo','tipo');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_vacuna]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'model' => $model,'listam'=>$listam
             ]);
         }
     }

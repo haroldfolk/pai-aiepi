@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Personal;
+use app\models\Refrigerador;
 use Yii;
 use app\models\CadenaDeFrio;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,12 +67,15 @@ class CadenafrioController extends Controller
     public function actionCreate()
     {
         $model = new CadenaDeFrio();
-
+        $refrigerador = Refrigerador::find()->all();
+            $listar=ArrayHelper::map($refrigerador,'id_refrigerador','modelo');
+        $personal=Personal::find()->all();
+        $listap=ArrayHelper::map($personal,'id_personal','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->nro_control]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'listar'=>$listar,'listap'=>$listap
             ]);
         }
     }

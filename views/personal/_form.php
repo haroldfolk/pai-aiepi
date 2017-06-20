@@ -16,17 +16,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'apellido')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'sexo')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'sexo')->dropDownList(['H' => 'Hombre', 'M' => 'Mujer']);?>
 
-    <?= $form->field($model, 'turno')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'turno')->dropDownList(['mañana' => 'mañana', 'tarde' => 'tarde']); ?>
 
     <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'telefono')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'id_centro')->textInput() ?>
+    <?= $form->field($model, 'id_centro')->dropDownList($listacentro) ?>
 
-    <?= $form->field($model, 'id_cargo')->textInput() ?>
+    <?= $form->field($model, 'id_cargo')->dropDownList($listacargo) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

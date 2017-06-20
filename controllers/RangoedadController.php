@@ -64,7 +64,7 @@ class RangoedadController extends Controller
     public function actionCreate()
     {
         $model = new RangoEdad();
-
+$model->id_rango=time();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_rango]);
         } else {

@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\CentroDeSalud;
 use Yii;
 use app\models\Refrigerador;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,12 +66,13 @@ class RefrigeradorController extends Controller
     public function actionCreate()
     {
         $model = new Refrigerador();
-
+        $centro = CentroDeSalud::find()->all();
+        $lista=ArrayHelper::map($centro,'id_centro','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_refrigerador]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'lista'=>$lista
             ]);
         }
     }

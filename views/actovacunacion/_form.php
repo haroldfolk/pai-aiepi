@@ -12,13 +12,16 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'fecha')->textInput() ?>
+    <?= $form->field($model, 'fecha')->widget(\yii\jui\DatePicker::classname(), [
+        //'language' => 'ru',
+        'dateFormat' => 'yyyy-MM-dd',
+    ]) ?>
 
     <?= $form->field($model, 'observaciones')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'id_paciente')->textInput() ?>
+    <?= $form->field($model, 'id_paciente')->dropDownList($listapacientes) ?>
 
-    <?= $form->field($model, 'id_personal')->textInput() ?>
+    <?= $form->field($model, 'id_personal')->dropDownList($listapersonal) ?>
 
     <?= $form->field($model, 'id_control')->textInput() ?>
 

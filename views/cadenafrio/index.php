@@ -25,8 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'fecha',
             'temperatura',
             'turno',
-            'id_personal',
-            // 'id_refrigerador',
+//            'id_personal',
+             'id_refrigerador',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
