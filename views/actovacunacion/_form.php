@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\jui\DatePicker;
 use yii\widgets\ActiveForm;
 
@@ -25,8 +26,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'id_personal')->dropDownList($listapersonal) ?>
 
 <?php
+echo Html::label('Vacunas para la edad ',null,['class'=>'h1']);
 foreach ($vacunasarray as $item){
-   echo Html::button($item,['class'=>'btn btn-warning']);
+    echo '<br>';
+    echo Html::a('Vacunar '.$item->nombre, Url::to(['vacunar', 'idvacuna' => $item->id_vacuna]),['class'=>'btn btn-default']);
+//   echo Html::button($item,['class'=>'btn btn-warning']);
    echo '<br>';
 }
 ?>
