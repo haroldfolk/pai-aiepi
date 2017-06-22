@@ -11,6 +11,7 @@ use Yii;
  * @property integer $peso
  * @property integer $talla
  * @property integer $nro_de_carnet
+ * @property string $fecha
  *
  * @property ActoDeVacunacion[] $actoDeVacunacions
  * @property CarnetDeVacunacion $nroDeCarnet
@@ -31,8 +32,9 @@ class ControlNutricional extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['peso', 'talla'], 'required'],
+            [['peso', 'talla', 'fecha'], 'required'],
             [['peso', 'talla', 'nro_de_carnet'], 'integer'],
+            [['fecha'], 'safe'],
             [['nro_de_carnet'], 'exist', 'skipOnError' => true, 'targetClass' => CarnetDeVacunacion::className(), 'targetAttribute' => ['nro_de_carnet' => 'nro_de_carnet']],
         ];
     }
@@ -43,10 +45,11 @@ class ControlNutricional extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_control' => 'Id Control',
-            'peso' => 'Peso',
-            'talla' => 'Talla',
-            'nro_de_carnet' => 'Nro De Carnet',
+            'id_control' => Yii::t('app', 'Id Control'),
+            'peso' => Yii::t('app', 'Peso'),
+            'talla' => Yii::t('app', 'Talla'),
+            'nro_de_carnet' => Yii::t('app', 'Nro De Carnet'),
+            'fecha' => Yii::t('app', 'Fecha'),
         ];
     }
 

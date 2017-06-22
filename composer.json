@@ -18,14 +18,18 @@
         "yiisoft/yii2": "~2.0.5",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "yiisoft/yii2-jui": "^2.0"
+        "yiisoft/yii2-jui": "^2.0",
+        "microinginer/yii2-dropdown-action-column": "dev-master",
+        "miloschuman/yii2-highcharts-widget": "*",
+        "exocet/yii2-bootstrap-material-design": "*",
+        "macgyer/yii2-materializecss": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
         "yiisoft/yii2-gii": "~2.0.0",
         "yiisoft/yii2-faker": "~2.0.0",
 
-        "codeception/base": "^2.2.3",
+        "codeception/codeception": "^2.2.3",
         "codeception/verify": "~0.3.1",
         "codeception/specify": "~0.4.3"
     },

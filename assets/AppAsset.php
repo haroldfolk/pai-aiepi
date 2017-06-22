@@ -25,5 +25,12 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+////////////////////////////////////////////////////////////////////////////////////////////////
+        'exocet\BootstrapMD\MaterialAsset', // include css and js
+        'exocet\BootstrapMD\MaterialIconsAsset', // include icons (optional)
+        'exocet\BootstrapMD\MaterialInitAsset', // add $.material.init(); js (optional)
+    //////////////////////////////
+//        'macgyer\yii2materializecss\assets\MaterializeAsset',
+
     ];
 }

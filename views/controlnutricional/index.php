@@ -16,6 +16,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Control Nutricional', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php Pjax::begin(); ?>    <?= GridView::widget([
+        'dataProvider' => $dataProviderPaciente,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            'id_paciente',
+            'nombre',
+            'apellidos',
+            'sexo',
+            'fecha_de_nacimiento',
+            // 'id_centro',
+
+            ['class' => 'yii\grid\ActionColumn'],
+        ],
+    ]); ?>
+    <?php Pjax::end(); ?></div>
 
 </div>
 
