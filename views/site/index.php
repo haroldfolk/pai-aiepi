@@ -14,7 +14,7 @@ $this->title = 'My Yii Application';
 
     <div class="jumbotron">
         <h1>Bienvenidos a la Red De Salud Este</h1>
-        <img src="http://d2ouvy59p0dg6k.cloudfront.net/img/original/municipalogo.jpg" alt="" height="100" width="100">
+       <h3> Hecho en Bolivia</h3>
 
     </div>
 </div>
