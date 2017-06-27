@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Acto De Vacunacions';
+$this->title = Yii::t('app', 'Acto De Vacunacions');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="acto-de-vacunacion-index">
@@ -14,21 +14,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Acto De Vacunacion', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Acto De Vacunacion'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-<?php Pjax::begin(); ?>    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
+    <?php Pjax::begin(); ?>
+    <?= GridView::widget([
+        'dataProvider' => $dataProviderPaciente,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id_acto',
-            'fecha',
-            'observaciones',
             'id_paciente',
-            'id_personal',
-            // 'id_control',
+            'nombre',
+            'apellidos',
+            'sexo',
+            'fecha_de_nacimiento',
+            // 'id_centro',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+    <?php Pjax::end(); ?>
+</div>

@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ActoDeVacunacion */
+/* @var $model app\models\CitaProxima */
 
-$this->title = $model->id_acto;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Acto De Vacunacions'), 'url' => ['index']];
+$this->title = $model->id_cita;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cita Proximas'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="acto-de-vacunacion-view">
+<div class="cita-proxima-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id_acto], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id_acto], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id_cita], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id_cita], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
@@ -28,11 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id_acto',
-            'fecha',
-            'observaciones',
+            'id_cita',
+            'fecha_programada',
+            'motivo',
             'id_paciente',
-            'id_personal',
         ],
     ]) ?>
 

@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\RangoEdad;
+use app\models\CitaProxima;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * RangoedadController implements the CRUD actions for RangoEdad model.
+ * CitaController implements the CRUD actions for CitaProxima model.
  */
-class RangoedadController extends Controller
+class CitaController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,13 +30,13 @@ class RangoedadController extends Controller
     }
 
     /**
-     * Lists all RangoEdad models.
+     * Lists all CitaProxima models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => RangoEdad::find(),
+            'query' => CitaProxima::find(),
         ]);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class RangoedadController extends Controller
     }
 
     /**
-     * Displays a single RangoEdad model.
+     * Displays a single CitaProxima model.
      * @param integer $id
      * @return mixed
      */
@@ -57,16 +57,16 @@ class RangoedadController extends Controller
     }
 
     /**
-     * Creates a new RangoEdad model.
+     * Creates a new CitaProxima model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new RangoEdad();
-$model->id_rango=time();
+        $model = new CitaProxima();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_rango]);
+            return $this->redirect(['view', 'id' => $model->id_cita]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -75,7 +75,7 @@ $model->id_rango=time();
     }
 
     /**
-     * Updates an existing RangoEdad model.
+     * Updates an existing CitaProxima model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -85,7 +85,7 @@ $model->id_rango=time();
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_rango]);
+            return $this->redirect(['view', 'id' => $model->id_cita]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -94,7 +94,7 @@ $model->id_rango=time();
     }
 
     /**
-     * Deletes an existing RangoEdad model.
+     * Deletes an existing CitaProxima model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ $model->id_rango=time();
     }
 
     /**
-     * Finds the RangoEdad model based on its primary key value.
+     * Finds the CitaProxima model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return RangoEdad the loaded model
+     * @return CitaProxima the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = RangoEdad::findOne($id)) !== null) {
+        if (($model = CitaProxima::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

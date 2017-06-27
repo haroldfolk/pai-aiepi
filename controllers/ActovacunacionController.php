@@ -2,18 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\CarnetDeVacunacion;
-use app\models\ControlNutricional;
+use app\models\Dosis;
+use app\models\DosisColocada;
 use app\models\Paciente;
-use app\models\Personal;
-use app\models\RangoEdad;
-use app\models\Vacuna;
-use app\models\VacunaActo;
-use app\models\VacunaRango;
+use app\models\PacienteSearch;
 use Yii;
 use app\models\ActoDeVacunacion;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -44,12 +39,12 @@ class ActovacunacionController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ActoDeVacunacion::find(),
-        ]);
+
+        $searchModel = new PacienteSearch();
+        $dataProviderPaciente = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'dataProviderPaciente' => $dataProviderPaciente, 'searchModel' => $searchModel,
         ]);
     }
 
@@ -60,9 +55,52 @@ class ActovacunacionController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+
+        $model = new ActoDeVacunacion();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['vacunar', 'id' => $model->id_acto]);
+        } else {
+            return $this->render('create', [
+                'model' => $model
+            ]);
+        }
+    }
+
+    public function actionVacunar($id)
+    {
+        $acto = ActoDeVacunacion::findOne(['id_acto' => $id]);
+        $paciente = Paciente::findOne(['id_paciente' => $acto->id_paciente]);
+        $edad = $this->calcularEdad(date('Y-m-d'), $paciente->fecha_de_nacimiento, 1);
+        $actosDelPaciente = ActoDeVacunacion::findAll(['id_paciente' =>$paciente->id_paciente]);
+        $dosisActos = DosisColocada::find()->where(['id_acto' => $actosDelPaciente])->all();
+        $dosisParaPaciente = Dosis::find()->where('meses_minimo<=' . $edad . ' and meses_maximo>' . $edad)->andWhere( ['not','id_dosis' => $dosisActos])->all();
+
+//    $dosisYaColocadas=Dosis::find()->where(['id_dosis'=>$dosisActos])->all();
+        $model = new DosisColocada();
+        $model->id_acto=$id;
+        return $this->render('vacunar', [
+            'model' => $model, 'dosisParaPaciente' => $dosisParaPaciente]);
+    }
+public function actionConfirmarvacuna($idDosis,$idActo)
+{
+    $model=new DosisColocada();
+    $model->id_acto=$idActo;
+    $model->id_dosis=$idDosis;
+    if ( $model->save()) {
+        return $this->redirect(['vacunar', 'id' => $model->id_acto]);
+    }
+}
+    public function calcularEdad($fechahoy, $fechanac, $b = 0)
+    {
+
+//    $date2 = date('Y-m-d');//la fecha del computador
+        $diff = abs(strtotime($fechahoy) - strtotime($fechanac));
+        $years = floor($diff / (365 * 60 * 60 * 24));
+        $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+        $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+        if ($b == 0) return $years;
+        elseif ($b == 1) return $years * 12 + $months;
+        elseif ($b == 2) return ($years * 12 + $months) * 30 + $days;
     }
 
     /**
@@ -83,79 +121,6 @@ class ActovacunacionController extends Controller
         }
     }
 
-    public function calcularEdad($fechahoy, $fechanac, $b = 0)
-    {
-
-//    $date2 = date('Y-m-d');//la fecha del computador
-        $diff = abs(strtotime($fechahoy) - strtotime($fechanac));
-        $years = floor($diff / (365 * 60 * 60 * 24));
-        $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-        $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-        if ($b == 0) return $years;
-        elseif ($b == 1) return $years * 12 + $months;
-        elseif ($b == 2) return ($years * 12 + $months) * 30 + $days;
-    }
-
-    public function actionCreateb($idcontrol, $idpaciente)
-    {
-        $paciente = Paciente::findOne(['id_paciente' => $idpaciente]);
-        $carnet = CarnetDeVacunacion::findOne(['id_paciente' => $idpaciente]);
-        $controlespaciente = ControlNutricional::find()->where(['nro_de_carnet' => $carnet->nro_de_carnet])->all();
-        $i = 0;
-        $valores = [];
-        $valoresT = [];
-        while ($i < 60) {
-            array_push($valores, null);
-            array_push($valoresT, null);
-
-            $i++;
-        }
-        foreach ($controlespaciente as $item) {
-
-
-            $edad = $this->calcularEdad($item->fecha, $paciente->fecha_de_nacimiento, 1);
-            $valores[$edad] = $item->peso / 1000;
-            $valoresT[$edad] = $item->talla;
-//             array_push($valores, $item->peso / 1000);
-            $i++;
-
-
-        }
-
-        $paciente = Paciente::findOne(['id_paciente' => $idpaciente]);
-        $edadMeses = $this->calcularEdad(date('Y-m-d'), $paciente->fecha_de_nacimiento, 1);
-//        $vacunasAColocar=Vacuna::findBySql('select * from vacunas WHERE id_vacuna=(
-//                                                      select id_vacuna from rango_edad where '.$edadMeses.'>=desde and '.$edadMeses.'<=hasta')->all();
-//
-//        print_r($edadMeses);
-//        exit();
-        $rangosAbarcados = RangoEdad::find()->where('desde<=' . $edadMeses.' and hasta>'.$edadMeses)->all();
-
-        //        print_r($rangosAbarcados);
-//        exit();
-        $vacunasrangos = VacunaRango::find()->where(['id_rango' => $rangosAbarcados])->all();
-//        $vacunasverificadas = Vacuna::find()->where(['id_vacuna' => $vacunasrangos])->all();
-        $vacunasverificadas = Vacuna::findAll(['id_vacuna' => $vacunasrangos]);
-//        print_r($vacunasverificadas);
-//        exit();
-//        $vacunasArray = ArrayHelper::map($vacunasverificadas, 'id_vacuna', 'nombre');
-        $model = new ActoDeVacunacion();
-        $model->id_control = $idcontrol;
-        $model->id_paciente = $idpaciente;
-
-        $listapersonal = Personal::find()->all();
-        $listapersonal = ArrayHelper::map($listapersonal, 'id_personal', 'nombre');
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//            $vacunasapasar=$vacunasverificadas;
-            return $this->redirect(['vacunacion', 'id_acto' => $model->id_acto]);
-        } else {
-            return $this->render('create', [
-                'model' => $model, 'listapersonal' => $listapersonal, 'vacunasarray' => $vacunasverificadas,
-                'valorespeso' => $valores, 'valorestalla' => $valoresT, 'sexo' => $paciente->sexo
-            ]);
-        }
-    }
-
     /**
      * Updates an existing ActoDeVacunacion model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -170,66 +135,6 @@ class ActovacunacionController extends Controller
             return $this->redirect(['view', 'id' => $model->id_acto]);
         } else {
             return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    public function actionVacunacion($id_acto)
-    {
-        $idpaciente = ActoDeVacunacion::findOne(['id_acto' => $id_acto])->id_paciente;
-        $paciente = Paciente::findOne(['id_paciente' => $idpaciente]);
-        $edadMeses = $this->calcularEdad(date('Y-m-d'), $paciente->fecha_de_nacimiento, 1);
-        $rangosAbarcados = RangoEdad::find()->where('desde<=' . $edadMeses.' and hasta>'.$edadMeses)->all();
-        $vacunasrangos = VacunaRango::find()->where(['id_rango' => $rangosAbarcados])->all();
-        $vacunasverificadas = Vacuna::findAll(['id_vacuna' => $vacunasrangos]);
-
-        $vacunacionesDelPaciente = ActoDeVacunacion::findAll(['id_paciente' => $idpaciente]);
-        $vacunasyacolocadas = [];
-        foreach ($vacunacionesDelPaciente as $vacunado) {
-            $edadParaEntonces = $this->calcularEdad($vacunado->fecha, $paciente->fecha_de_nacimiento, 1);
-
-            if ($edadParaEntonces >= $edadMeses) {
-                $vacunasactos = VacunaActo::findAll(['id_acto' => $vacunado->id_acto]);
-                foreach ($vacunasactos as $vacAc) {
-                    array_push($vacunasyacolocadas, $vacAc->id_vacuna);
-
-                }
-            }
-
-
-        }
-        return $this->render('vacunacion', [
-            'id_acto' => $id_acto, 'vacunasarray' => $vacunasverificadas,'vacunasyacolocadas'=>$vacunasyacolocadas
-        ]);
-
-    }
-
-    public function actionVacunar($id_acto, $id_vacuna)
-    {
-//$model=new VacunaActo();
-//$model->id_acto=$id_acto;
-//$model->id_vacuna=$id_vacuna;
-//        $idpaciente=ActoDeVacunacion::findOne(['id_acto'=>$id_acto])->id_paciente;
-//        $paciente = Paciente::findOne(['id_paciente' => $idpaciente]);
-//        $edadMeses = $this->calcularEdad(date('Y-m-d'), $paciente->fecha_de_nacimiento, 1);
-//        $yasecoloco=false;
-//        $vacunacionesDelPaciente=ActoDeVacunacion::findAll(['id_paciente'=>$idpaciente]);
-//        foreach ($vacunacionesDelPaciente as $vacunado){
-//            $vacunasactos=VacunaActo::findAll(['id_acto'=>$vacunado->id_acto]);
-//            foreach ($vacunasactos as $vacAc){
-//
-//            }
-//
-//        }
-        $model = new VacunaActo();
-        $model->id_acto = $id_acto;
-        $model->id_vacuna = $id_vacuna;
-
-        if ($model->save()) {
-            return $this->redirect(['vacunacion', 'id_acto' => $id_acto]);
-        } else {
-            return $this->render('vacunar', [
                 'model' => $model,
             ]);
         }

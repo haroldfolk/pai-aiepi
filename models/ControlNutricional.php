@@ -10,11 +10,12 @@ use Yii;
  * @property integer $id_control
  * @property integer $peso
  * @property integer $talla
- * @property integer $nro_de_carnet
  * @property string $fecha
+ * @property integer $id_paciente
+ * @property integer $id_personal
  *
- * @property ActoDeVacunacion[] $actoDeVacunacions
- * @property CarnetDeVacunacion $nroDeCarnet
+ * @property Paciente $idPaciente
+ * @property Personal $idPersonal
  */
 class ControlNutricional extends \yii\db\ActiveRecord
 {
@@ -33,9 +34,10 @@ class ControlNutricional extends \yii\db\ActiveRecord
     {
         return [
             [['peso', 'talla', 'fecha'], 'required'],
-            [['peso', 'talla', 'nro_de_carnet'], 'integer'],
+            [['peso', 'talla', 'id_paciente', 'id_personal'], 'integer'],
             [['fecha'], 'safe'],
-            [['nro_de_carnet'], 'exist', 'skipOnError' => true, 'targetClass' => CarnetDeVacunacion::className(), 'targetAttribute' => ['nro_de_carnet' => 'nro_de_carnet']],
+            [['id_paciente'], 'exist', 'skipOnError' => true, 'targetClass' => Paciente::className(), 'targetAttribute' => ['id_paciente' => 'id_paciente']],
+            [['id_personal'], 'exist', 'skipOnError' => true, 'targetClass' => Personal::className(), 'targetAttribute' => ['id_personal' => 'id_personal']],
         ];
     }
 
@@ -48,24 +50,25 @@ class ControlNutricional extends \yii\db\ActiveRecord
             'id_control' => Yii::t('app', 'Id Control'),
             'peso' => Yii::t('app', 'Peso'),
             'talla' => Yii::t('app', 'Talla'),
-            'nro_de_carnet' => Yii::t('app', 'Nro De Carnet'),
             'fecha' => Yii::t('app', 'Fecha'),
+            'id_paciente' => Yii::t('app', 'Id Paciente'),
+            'id_personal' => Yii::t('app', 'Id Personal'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getActoDeVacunacions()
+    public function getIdPaciente()
     {
-        return $this->hasMany(ActoDeVacunacion::className(), ['id_control' => 'id_control']);
+        return $this->hasOne(Paciente::className(), ['id_paciente' => 'id_paciente']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNroDeCarnet()
+    public function getIdPersonal()
     {
-        return $this->hasOne(CarnetDeVacunacion::className(), ['nro_de_carnet' => 'nro_de_carnet']);
+        return $this->hasOne(Personal::className(), ['id_personal' => 'id_personal']);
     }
 }

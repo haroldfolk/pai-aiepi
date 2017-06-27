@@ -14,11 +14,7 @@ use Yii;
  * @property string $descripcion
  * @property integer $id_metodo
  *
- * @property MetodoAplicacion $idMetodo
- * @property VacunaActo[] $vacunaActos
- * @property ActoDeVacunacion[] $idActos
- * @property VacunaRango[] $vacunaRangos
- * @property RangoEdad[] $idRangos
+ * @property Dosis[] $doses
  */
 class Vacuna extends \yii\db\ActiveRecord
 {
@@ -40,7 +36,6 @@ class Vacuna extends \yii\db\ActiveRecord
             [['nro_dosis', 'id_metodo'], 'integer'],
             [['nombre', 'descripcion'], 'string', 'max' => 50],
             [['unidad_de_medida'], 'string', 'max' => 5],
-            [['id_metodo'], 'exist', 'skipOnError' => true, 'targetClass' => MetodoAplicacion::className(), 'targetAttribute' => ['id_metodo' => 'id_metodo']],
         ];
     }
 
@@ -50,52 +45,20 @@ class Vacuna extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_vacuna' => 'Id Vacuna',
-            'nombre' => 'Nombre',
-            'nro_dosis' => 'Nro Dosis',
-            'unidad_de_medida' => 'Unidad De Medida',
-            'descripcion' => 'Descripcion',
-            'id_metodo' => 'Id Metodo',
+            'id_vacuna' => Yii::t('app', 'Id Vacuna'),
+            'nombre' => Yii::t('app', 'Nombre'),
+            'nro_dosis' => Yii::t('app', 'Nro Dosis'),
+            'unidad_de_medida' => Yii::t('app', 'Unidad De Medida'),
+            'descripcion' => Yii::t('app', 'Descripcion'),
+            'id_metodo' => Yii::t('app', 'Id Metodo'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdMetodo()
+    public function getDoses()
     {
-        return $this->hasOne(MetodoAplicacion::className(), ['id_metodo' => 'id_metodo']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getVacunaActos()
-    {
-        return $this->hasMany(VacunaActo::className(), ['id_vacuna' => 'id_vacuna']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIdActos()
-    {
-        return $this->hasMany(ActoDeVacunacion::className(), ['id_acto' => 'id_acto'])->viaTable('vacuna_acto', ['id_vacuna' => 'id_vacuna']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getVacunaRangos()
-    {
-        return $this->hasMany(VacunaRango::className(), ['id_vacuna' => 'id_vacuna']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIdRangos()
-    {
-        return $this->hasMany(RangoEdad::className(), ['id_rango' => 'id_rango'])->viaTable('vacuna_rango', ['id_vacuna' => 'id_vacuna']);
+        return $this->hasMany(Dosis::className(), ['id_vacuna' => 'id_vacuna']);
     }
 }

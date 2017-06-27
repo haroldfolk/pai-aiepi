@@ -7,13 +7,17 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ControlNutricional */
 
-$this->title = Yii::t('app', 'Create Control Nutricional');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Control Nutricionals'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="control-nutricional-create">
+    <h1 align="center">Diagnostico del paciente</h1>
+    <h2 class="">Segun el peso=><?=$diagnostico?></h2><br><h2>Segun la talla=><?=$diagnosticotalla?></h2>
 
+    <h2>PESO: <?=$peso?> y Talla:<?=$talla?></h2>
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php
+
+    ?>
     <?php
     if ($sexo == 'M')
         echo Highcharts::widget([
@@ -144,8 +148,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
 
     ?>
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+
 
 </div>

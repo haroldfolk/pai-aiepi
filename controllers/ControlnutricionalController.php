@@ -1,13 +1,18 @@
 <?php
 
 namespace app\controllers;
-
+use MathPHP\Statistics\Regression;
 use app\models\CarnetDeVacunacion;
 use app\models\Paciente;
 use app\models\PacienteSearch;
+use app\models\Pesohombre;
+use app\models\Pesomujer;
+use app\models\Tallahombre;
+use app\models\Tallamujer;
 use Yii;
 use app\models\ControlNutricional;
 use yii\data\ActiveDataProvider;
+use yii\debug\models\timeline\DataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -56,12 +61,14 @@ class ControlnutricionalController extends Controller
      */
     public function actionView($id)
     {
+
         $paciente = Paciente::findOne(['id_paciente' => $id]);
+
         $carnet = CarnetDeVacunacion::findOne(['id_paciente' => $id]);
-        $controlespaciente = ControlNutricional::find()->where(['nro_de_carnet' => $carnet->nro_de_carnet])->all();
+        $controlespaciente = ControlNutricional::find()->where(['id_paciente' => $id])->all();
         $i = 0;
         $valores = [];
-        $valoresT=[];
+        $valoresT = [];
         while ($i < 60) {
             array_push($valores, null);
             array_push($valoresT, null);
@@ -73,7 +80,7 @@ class ControlnutricionalController extends Controller
 
             $edad = $this->calcularEdad($item->fecha, $paciente->fecha_de_nacimiento, 1);
             $valores[$edad] = $item->peso / 1000;
-            $valoresT[$edad] = $item->talla ;
+            $valoresT[$edad] = $item->talla;
 //             array_push($valores, $item->peso / 1000);
             $i++;
 
@@ -82,12 +89,15 @@ class ControlnutricionalController extends Controller
 
         $model = new ControlNutricional();
 
-        $model->nro_de_carnet = $carnet->nro_de_carnet;
+//        $model->nro_de_carnet = $carnet->nro_de_carnet;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['actovacunacion/createb', 'idcontrol' => $model->id_control, 'idpaciente' => $id]);
+            if ($paciente->sexo == 'M') {
+
+            }
+            return $this->redirect(['control', 'peso' => $model->peso, 'talla' => $model->talla, 'paciente_id' => $id]);
         } else {
             return $this->render('create', [
-                'model' => $model, 'valorespeso' => $valores, 'valorestalla' => $valoresT,'sexo'=>$paciente->sexo
+                'model' => $model, 'valorespeso' => $valores, 'valorestalla' => $valoresT, 'sexo' => $paciente->sexo
             ]);
         }
     }
@@ -121,6 +131,112 @@ class ControlnutricionalController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function regresionLineal($arrayx, $arrayy)
+    {
+//        $Ex=array_sum($arrayx);
+//        $Ey=array_sum($arrayy);
+//        $Ex2=array_sum(pow($arrayx,2));
+//        $EEX2=pow($Ex,2);
+//        $EXY
+//    Regresión Fórmula :
+//
+//Ecuación de Regresión ( y) = a + bx
+//Pendiente(b) = (NΣXY - (ΣX)(ΣY)) / (NΣX2 - (ΣX)2)
+//Interceptar(a) = (ΣY - b(ΣX)) / N
+//
+//Donde,
+// x e y son las variables.
+//    b = La Pendiente de la Recta de Regresión
+//a = El Punto de Intersección de la Línea de Regresión y el eje y
+//N = Número de Valores o Elementos
+//X = Primero Puntuación
+//Y = Segundo Puntuación
+//ΣXY = Suma del Producto de Puntuaciones Primera y Segunda
+//ΣX = Suma de las Primeras puntuaciones
+//ΣY = Suma de Segunda Puntuaciones
+//ΣX2 = Suma de Cuadrados Primeros Resultados
+    }
+public function actionPruebas(){
+    $points = [[1,2], [2,3], [4,5], [5,7], [6,8]];
+
+// Simple linear regression (least squares method)
+    $regression = new Regression\Linear($points);
+    $y          = $regression->evaluate(0.5);
+//    print_r($y);exit();
+}
+    public function actionControl($peso, $talla, $paciente_id)
+    {
+
+        $paciente = Paciente::findOne(['id_paciente' => $paciente_id]);
+        $controlespaciente = ControlNutricional::find()->where(['id_paciente' => $paciente->id_paciente])->all();
+        $i = 0;
+        $valores = [];
+        $valoresT = [];
+        while ($i < 60) {
+            array_push($valores, null);
+            array_push($valoresT, null);
+
+            $i++;
+        }
+        foreach ($controlespaciente as $item) {
+
+
+            $edad = $this->calcularEdad($item->fecha, $paciente->fecha_de_nacimiento, 1);
+            $valores[$edad] = $item->peso / 1000;
+            $valoresT[$edad] = $item->talla;
+//             array_push($valores, $item->peso / 1000);
+            $i++;
+
+
+        }////////////////////////////
+        ///
+        ///
+
+        $peso = $peso / 1000;
+        $edad2 = $this->calcularEdad(date('Y-m-d'), $paciente->fecha_de_nacimiento, 1);
+        if ($paciente->sexo == 'M') {
+            $tallasestandar = Tallamujer::findOne(['mes' => $edad2]);
+            $pesosestandar = Pesomujer::findOne(['mes' => $edad2]);
+        } else {
+            $tallasestandar = Tallahombre::findOne(['mes' => $edad2]);
+            $pesosestandar = Pesohombre::findOne(['mes' => $edad2]);
+        }
+
+        if (($peso > $pesosestandar->desnutricion_moderada && $peso < $pesosestandar->sobrepeso) || ($peso == $pesosestandar->peso_normal)) {
+            $diagnostico = "El paciente cuenta con un peso dentro de los rangos normales";
+        } elseif ($peso <= $pesosestandar->desnutricion_critica) {
+            $diagnostico = "El paciente presenta un cuadro de desnutricion critica";
+        } elseif ($peso >= $pesosestandar->obesidad_critica) {
+            $diagnostico = "El paciente presenta un cuadro critico de obesidad2";
+        } else {
+            $diagnostico = "El paciente cuenta con un peso dentro de los rangos normales";
+            if ($peso >= $pesosestandar->peso_normal) {
+                $diagnostico = $diagnostico . ", Pero con un cuadro tentativo de obesidad";
+            } else {
+                $diagnostico = $diagnostico . ", Pero con un cuadro tentativo de desnutricion";
+            }
+        }
+
+        if (($talla > $tallasestandar->talla_baja && $talla < $tallasestandar->talla_alta) || ($talla == $tallasestandar->talla_normal)) {
+            $diagnosticotalla = "El paciente cuenta con una talla dentro de los rangos normales";
+        } elseif ($talla <= $tallasestandar->talla_baja_critica) {
+            $diagnosticotalla = "El paciente presenta un cuadro de bajo crecimiento critico";
+        } elseif ($talla >= $tallasestandar->talla_alta_critica) {
+            $diagnosticotalla = "El paciente presenta un cuadro de crecimiento criticamente alto ";
+        } else {
+            $diagnosticotalla = "El paciente cuenta con una talla dentro de los rangos normales";
+            if ($talla > $tallasestandar->talla_normal) {
+                $diagnosticotalla = $diagnosticotalla . ", Pero con un cuadro tentativo de crecimiento alto";
+            } else {
+                $diagnosticotalla = $diagnosticotalla . ", Pero con un cuadro tentativo de crecimiento bajo";
+            }
+        }
+        return $this->render('control', [
+            'diagnostico' => $diagnostico, 'diagnosticotalla' => $diagnosticotalla, 'peso' => $peso, 'talla' => $talla, 'valorespeso' => $valores, 'valorestalla' => $valoresT, 'sexo' => $paciente->sexo
+        ]);
+
     }
 
     /**

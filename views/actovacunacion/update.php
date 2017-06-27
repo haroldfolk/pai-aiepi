@@ -5,10 +5,12 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ActoDeVacunacion */
 
-$this->title = 'Update Acto De Vacunacion: ' . $model->id_acto;
-$this->params['breadcrumbs'][] = ['label' => 'Acto De Vacunacions', 'url' => ['index']];
+$this->title = Yii::t('app', 'Update {modelClass}: ', [
+    'modelClass' => 'Acto De Vacunacion',
+]) . $model->id_acto;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Acto De Vacunacions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_acto, 'url' => ['view', 'id' => $model->id_acto]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="acto-de-vacunacion-update">
 

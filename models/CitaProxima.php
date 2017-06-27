@@ -10,9 +10,9 @@ use Yii;
  * @property integer $id_cita
  * @property string $fecha_programada
  * @property string $motivo
- * @property integer $id_acto
+ * @property integer $id_paciente
  *
- * @property ActoDeVacunacion $idActo
+ * @property Paciente $idPaciente
  */
 class CitaProxima extends \yii\db\ActiveRecord
 {
@@ -32,9 +32,9 @@ class CitaProxima extends \yii\db\ActiveRecord
         return [
             [['fecha_programada', 'motivo'], 'required'],
             [['fecha_programada'], 'safe'],
-            [['id_acto'], 'integer'],
+            [['id_paciente'], 'integer'],
             [['motivo'], 'string', 'max' => 50],
-            [['id_acto'], 'exist', 'skipOnError' => true, 'targetClass' => ActoDeVacunacion::className(), 'targetAttribute' => ['id_acto' => 'id_acto']],
+            [['id_paciente'], 'exist', 'skipOnError' => true, 'targetClass' => Paciente::className(), 'targetAttribute' => ['id_paciente' => 'id_paciente']],
         ];
     }
 
@@ -44,18 +44,18 @@ class CitaProxima extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_cita' => 'Id Cita',
-            'fecha_programada' => 'Fecha Programada',
-            'motivo' => 'Motivo',
-            'id_acto' => 'Id Acto',
+            'id_cita' => Yii::t('app', 'Id Cita'),
+            'fecha_programada' => Yii::t('app', 'Fecha Programada'),
+            'motivo' => Yii::t('app', 'Motivo'),
+            'id_paciente' => Yii::t('app', 'Id Paciente'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdActo()
+    public function getIdPaciente()
     {
-        return $this->hasOne(ActoDeVacunacion::className(), ['id_acto' => 'id_acto']);
+        return $this->hasOne(Paciente::className(), ['id_paciente' => 'id_paciente']);
     }
 }

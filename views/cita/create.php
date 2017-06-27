@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\RangoEdad */
+/* @var $model app\models\CitaProxima */
 
-$this->title = 'Create Rango Edad';
-$this->params['breadcrumbs'][] = ['label' => 'Rango Edads', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Cita Proxima');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cita Proximas'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="rango-edad-create">
+<div class="cita-proxima-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

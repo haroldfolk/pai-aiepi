@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Cargo;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -61,6 +62,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+//        $cargos=Cargo::find()->asArray()->all();
+//        print_r($cargos);
+//        exit();
         return $this->render('index');
     }
 

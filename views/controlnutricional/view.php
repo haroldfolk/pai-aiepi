@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\ControlNutricional */
 
 $this->title = $model->id_control;
-$this->params['breadcrumbs'][] = ['label' => 'Control Nutricionals', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Control Nutricionals'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="control-nutricional-view">
@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id_control], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id_control], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id_control], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id_control], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -31,7 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_control',
             'peso',
             'talla',
-            'nro_de_carnet',
+            'fecha',
+            'id_paciente',
+            'id_personal',
         ],
     ]) ?>
 

@@ -22,7 +22,8 @@
         "microinginer/yii2-dropdown-action-column": "dev-master",
         "miloschuman/yii2-highcharts-widget": "*",
         "exocet/yii2-bootstrap-material-design": "*",
-        "macgyer/yii2-materializecss": "*"
+        "macgyer/yii2-materializecss": "*",
+        "markrogoyski/math-php": "0.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

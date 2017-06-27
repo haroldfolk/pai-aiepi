@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Vacuna;
-use app\models\VacunaSearch;
+use app\models\Dosis;
+use app\models\DosisSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * VacunaController implements the CRUD actions for Vacuna model.
+ * DosisController implements the CRUD actions for Dosis model.
  */
-class VacunaController extends Controller
+class DosisController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class VacunaController extends Controller
     }
 
     /**
-     * Lists all Vacuna models.
+     * Lists all Dosis models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new VacunaSearch();
+        $searchModel = new DosisSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class VacunaController extends Controller
     }
 
     /**
-     * Displays a single Vacuna model.
+     * Displays a single Dosis model.
      * @param integer $id
      * @return mixed
      */
@@ -57,16 +57,16 @@ class VacunaController extends Controller
     }
 
     /**
-     * Creates a new Vacuna model.
+     * Creates a new Dosis model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Vacuna();
+        $model = new Dosis();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_vacuna]);
+            return $this->redirect(['view', 'id' => $model->id_dosis]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -75,7 +75,7 @@ class VacunaController extends Controller
     }
 
     /**
-     * Updates an existing Vacuna model.
+     * Updates an existing Dosis model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -85,7 +85,7 @@ class VacunaController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_vacuna]);
+            return $this->redirect(['view', 'id' => $model->id_dosis]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -94,7 +94,7 @@ class VacunaController extends Controller
     }
 
     /**
-     * Deletes an existing Vacuna model.
+     * Deletes an existing Dosis model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class VacunaController extends Controller
     }
 
     /**
-     * Finds the Vacuna model based on its primary key value.
+     * Finds the Dosis model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Vacuna the loaded model
+     * @return Dosis the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Vacuna::findOne($id)) !== null) {
+        if (($model = Dosis::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
