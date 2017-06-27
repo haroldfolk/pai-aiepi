@@ -14,7 +14,7 @@ $this->title = 'My Yii Application';
 
     <div class="jumbotron">
         <h1>Bienvenidos a la Red De Salud Este</h1>
-       <h3> Hecho en Bolivia</h3>
+       <h3> Hecho en Bolivia Se Cambio en la Branch</h3>
 
     </div>
 </div>
