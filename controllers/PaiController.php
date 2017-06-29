@@ -45,8 +45,8 @@ class PaiController extends \yii\web\Controller
                     } else {
                         $actosDeFecha = ActoDeVacunacion::find()->where(['fecha' => $nuevafecha])->all();
                         $dosisTotalesDelDia = DosisColocada::find()->where(['id_acto' => $actosDeFecha, 'id_dosis' => $model->dosis])->count();
-//                        $dosisTotalesDelDia = $dosisTotalesDelDia;
-                        $dosisTotalesDelDia = $dosisTotalesDelDia + rand(0, 5);
+                        $dosisTotalesDelDia = $dosisTotalesDelDia;
+//                        $dosisTotalesDelDia = $dosisTotalesDelDia + rand(0, 5);
                         $nuevoPunto = [$i, end($valoresReales) + $dosisTotalesDelDia];
                         array_push($puntosParaRegresion, $nuevoPunto);
                         array_push($valoresPronosticados, null);
