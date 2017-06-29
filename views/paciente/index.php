@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'fecha_de_nacimiento',
             // 'id_centro',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}'],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

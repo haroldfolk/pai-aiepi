@@ -15,12 +15,12 @@ class AiepiForm extends \yii\db\ActiveRecord
     public $sexo;
 public $edadinicio;
     public $edadfin;
-
+    public $idcentro;
     public function rules()
     {
         return [
             // username and password are both required
-            [['fechainicio', 'fechafin','sexo','edadinicio','edadfin'], 'required'],
+            [['fechainicio', 'fechafin','sexo','edadinicio','edadfin','idcentro'], 'required'],
             [['fechainicio', 'fechafin'], 'safe'],
             // password is validated by validatePassword()
 

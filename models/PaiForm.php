@@ -13,15 +13,16 @@ class PaiForm extends \yii\db\ActiveRecord
     public $fechainicio;
     public $fechafin;
     public $dosis;
-
+public $idcentro;
     public function rules()
     {
         return [
             // username and password are both required
-            [['fechainicio', 'fechafin','dosis'], 'required'],
+            [['fechainicio', 'fechafin','dosis','idcentro'], 'required'],
             [['fechainicio', 'fechafin'], 'safe'],
             // password is validated by validatePassword()
             [['dosis'], 'integer'],
+
         ];
     }
 

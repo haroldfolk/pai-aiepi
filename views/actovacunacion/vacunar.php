@@ -9,13 +9,13 @@ foreach ($dosisParaPaciente as $item){
     echo Html::a('Vacunar '.$item->descripcion, Url::to(['confirmarvacuna', 'idActo'=>$model->id_acto,'idDosis' => $item->id_dosis]),['class'=>'btn btn-default']);
 //   echo Html::button($item,['class'=>'btn btn-warning']);
     echo '<br>';
-    echo '<br>';
+
 
 
 }
 ?>
 
-echo Html::a('Salir al inicio', Url::to(['index']),['class'=>'btn btn-default']);
+<?php echo Html::a('Salir al inicio', Url::to(['index']),['class'=>'btn btn-danger']);
 
 
 ?>

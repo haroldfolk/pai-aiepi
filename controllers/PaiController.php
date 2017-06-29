@@ -8,6 +8,7 @@ use app\models\Dosis;
 use app\models\DosisColocada;
 use app\models\Paciente;
 use app\models\PaiForm;
+use app\models\Personal;
 use MathPHP\Statistics\Regression\Linear;
 use MathPHP\Statistics\Regression\LinearThroughPoint;
 use MathPHP\Statistics\Regression\LineweaverBurk;
@@ -25,7 +26,8 @@ class PaiController extends \yii\web\Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
-                $dosisEntrefechas = ActoDeVacunacion::find()->where('fecha>=' . $model->fechainicio . ' and fecha<=' . $model->fechafin)->select('id_acto');
+                $personalDeCentro=Personal::find()->where(['id_centro'=>$model->idcentro]);
+                $dosisEntrefechas = ActoDeVacunacion::find()->where('fecha>="' . $model->fechainicio . '" and fecha<="' . $model->fechafin.'"')->andWhere(['id_personal'=>$personalDeCentro])->select('id_acto');
                 $fechaIniCopia = ($model->fechainicio);
                 $calcularDias = $this->calcularEdad($model->fechafin, $model->fechainicio, 2);
                 $valoresReales = [];
@@ -44,7 +46,7 @@ class PaiController extends \yii\web\Controller
                         $actosDeFecha = ActoDeVacunacion::find()->where(['fecha' => $nuevafecha])->all();
                         $dosisTotalesDelDia = DosisColocada::find()->where(['id_acto' => $actosDeFecha, 'id_dosis' => $model->dosis])->count();
 //                        $dosisTotalesDelDia = $dosisTotalesDelDia;
-                        $dosisTotalesDelDia = $dosisTotalesDelDia + rand(0, 20);
+                        $dosisTotalesDelDia = $dosisTotalesDelDia + rand(0, 5);
                         $nuevoPunto = [$i, end($valoresReales) + $dosisTotalesDelDia];
                         array_push($puntosParaRegresion, $nuevoPunto);
                         array_push($valoresPronosticados, null);

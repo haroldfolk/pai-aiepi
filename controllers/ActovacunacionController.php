@@ -6,6 +6,7 @@ use app\models\Dosis;
 use app\models\DosisColocada;
 use app\models\Paciente;
 use app\models\PacienteSearch;
+use app\models\User;
 use Yii;
 use app\models\ActoDeVacunacion;
 use yii\data\ActiveDataProvider;
@@ -39,7 +40,11 @@ class ActovacunacionController extends Controller
      */
     public function actionIndex()
     {
-
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        } else {
+            $idUser = Yii::$app->getUser()->id;
+        }
         $searchModel = new PacienteSearch();
         $dataProviderPaciente = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -57,6 +62,7 @@ class ActovacunacionController extends Controller
     {
 
         $model = new ActoDeVacunacion();
+        $model->id_paciente=$id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['vacunar', 'id' => $model->id_acto]);
         } else {
@@ -72,8 +78,8 @@ class ActovacunacionController extends Controller
         $paciente = Paciente::findOne(['id_paciente' => $acto->id_paciente]);
         $edad = $this->calcularEdad(date('Y-m-d'), $paciente->fecha_de_nacimiento, 1);
         $actosDelPaciente = ActoDeVacunacion::findAll(['id_paciente' =>$paciente->id_paciente]);
-        $dosisActos = DosisColocada::find()->where(['id_acto' => $actosDelPaciente])->all();
-        $dosisParaPaciente = Dosis::find()->where('meses_minimo<=' . $edad . ' and meses_maximo>' . $edad)->andWhere( ['not','id_dosis' => $dosisActos])->all();
+        $dosisActos = DosisColocada::find()->where(['id_acto' => $actosDelPaciente])->select('id_dosis')->all();
+        $dosisParaPaciente = Dosis::find()->where('meses_minimo<=' . $edad. ' and meses_maximo>' . $edad )->andWhere(['not in','id_dosis',$dosisActos])->all();
 
 //    $dosisYaColocadas=Dosis::find()->where(['id_dosis'=>$dosisActos])->all();
         $model = new DosisColocada();
@@ -108,10 +114,16 @@ public function actionConfirmarvacuna($idDosis,$idActo)
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($idp)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        } else {
+            $idUser = Yii::$app->getUser()->id;
+        }
         $model = new ActoDeVacunacion();
-
+$model->id_personal=User::getIdPersonal($idUser);
+$model->id_paciente=$idp;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_acto]);
         } else {

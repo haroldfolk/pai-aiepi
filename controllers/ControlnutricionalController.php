@@ -209,7 +209,7 @@ public function actionPruebas(){
         } elseif ($peso <= $pesosestandar->desnutricion_critica) {
             $diagnostico = "El paciente presenta un cuadro de desnutricion critica";
         } elseif ($peso >= $pesosestandar->obesidad_critica) {
-            $diagnostico = "El paciente presenta un cuadro critico de obesidad2";
+            $diagnostico = "El paciente presenta un cuadro critico de obesidad";
         } else {
             $diagnostico = "El paciente cuenta con un peso dentro de los rangos normales";
             if ($peso >= $pesosestandar->peso_normal) {

@@ -19,6 +19,7 @@ use yii\widgets\ActiveForm;
     $listan=ArrayHelper::map($paciente,'id_paciente','nombre');
     $personal = Personal::find()->all();
     $listap=ArrayHelper::map($personal,'id_personal','nombre');
+//    $model->id_paciente=$id;
     ?>
 
     <?= $form->field($model, 'fecha')->widget(DatePicker::classname(), [
@@ -27,7 +28,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
     <?= $form->field($model, 'observaciones')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'id_paciente')->dropDownList($listan) ?>
+<!--    --><?php //echo $form->field($model, 'id_paciente')->dropDownList($listan) ?>
 
     <?= $form->field($model, 'id_personal')->dropDownList($listap) ?>
 

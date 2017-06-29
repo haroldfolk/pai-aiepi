@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\CadenaDeFrio;
 use app\models\CentroDeSalud;
 use app\models\Personal;
 use app\models\User;
@@ -72,12 +73,14 @@ class RefrigeradorController extends Controller
             return $this->goHome();
         } else {
             $idUser = Yii::$app->getUser()->id;
+            $personal = Personal::find()->where(['id_personal' => Usuario::findOne(['id' => $idUser])->id_personal])->all();
+            $listap = ArrayHelper::map($personal, 'id_personal', 'nombre');
+
         }
 
         $centro = CentroDeSalud::findOne(['id_centro' => Personal::findOne(['id_personal' => User::getIdPersonal($idUser)])]);
         $model = new Refrigerador();
-        $model->id_centro = $centro->id_centro;
-
+        $model->id_centro=$centro->id_centro;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_refrigerador]);
         } else {

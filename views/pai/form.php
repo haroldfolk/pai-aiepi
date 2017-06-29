@@ -15,7 +15,9 @@ $listam=ArrayHelper::map($dosis,'id_dosis','descripcion');
 ?>
 <div class="pai-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin();
+    $centro=\app\models\CentroDeSalud::find()->all();
+    ?>
 
         <?= $form->field($model, 'fechainicio')->widget(DatePicker::classname(), [
             //'language' => 'ru',
@@ -26,7 +28,7 @@ $listam=ArrayHelper::map($dosis,'id_dosis','descripcion');
             'dateFormat' => 'yyyy-MM-dd',
         ]) ?>
         <?= $form->field($model, 'dosis')->dropDownList($listam) ?>
-
+    <?= $form->field($model, 'idcentro')->dropDownList(ArrayHelper::map($centro,'id_centro','nombre')) ?>
     
         <div class="form-group">
             <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-primary']) ?>

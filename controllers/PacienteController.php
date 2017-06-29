@@ -4,6 +4,9 @@ namespace app\controllers;
 
 use app\models\CarnetDeVacunacion;
 use app\models\CentroDeSalud;
+use app\models\Personal;
+use app\models\User;
+use app\models\Usuario;
 use Yii;
 use app\models\Paciente;
 use app\models\PacienteSearch;
@@ -38,6 +41,11 @@ class PacienteController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        } else {
+            $idUser = Yii::$app->getUser()->id;
+        }
         $searchModel = new PacienteSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -67,8 +75,15 @@ class PacienteController extends Controller
      */
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        } else {
+            $idUser = Yii::$app->getUser()->id;
+        }
+
+        $centro = CentroDeSalud::findAll(['id_centro' => Personal::findOne(['id_personal' => User::getIdPersonal($idUser)])]);
         $model = new Paciente();
-        $centro = CentroDeSalud::find()->all();
+//        $centro = CentroDeSalud::find()->where(['id_centro'=>$personal->id_centro])->all();
         $listacentro=ArrayHelper::map($centro,'id_centro','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $carnet=new CarnetDeVacunacion();

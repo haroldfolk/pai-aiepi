@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\ControlNutricional;
 use app\models\Paciente;
+use app\models\Personal;
 use app\models\Pesohombre;
 use app\models\Pesomujer;
 use app\models\Tallahombre;
@@ -46,11 +47,20 @@ class AiepiController extends \yii\web\Controller
         //Tallas
         $TB = 0;
         $TN = 0;
+        /////////////
+        $Ob=rand(0,10);
+        $SO=rand(0,10);
+        $NO=rand(0,10);
+        $DC=rand(0,10);
+        $TN=$Ob+$NO+$SO+$DC;
         $model = new AiepiForm();
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
-                $controles = ControlNutricional::find()->where('fecha>=' . $model->fechainicio . ' and fecha<=' . $model->fechafin)->all();
+                $personalDeCentro=Personal::find()->where(['id_centro'=>$model->idcentro])->select(['id_personal']);
+//                print_r($personalDeCentro);exit();
+                $controles = ControlNutricional::find()->where('fecha<"'.$model->fechafin.'"and fecha>"'.$model->fechainicio.'"')->andWhere(['id_personal'=>$personalDeCentro])->all();
+//                print_r($controles);exit();
                 foreach ($controles as $control) {
                     $paciente = Paciente::find()->where(['id_paciente' => $control->id_paciente])->one();
                     $edadPaciente = $this->calcularEdad($control->fecha, $paciente->fecha_de_nacimiento, 1);
