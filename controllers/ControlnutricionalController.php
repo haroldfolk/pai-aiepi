@@ -88,14 +88,13 @@ class ControlnutricionalController extends Controller
         }
 
         $model = new ControlNutricional();
-
+        $model->id_paciente=$paciente->id_paciente;
 //        $model->nro_de_carnet = $carnet->nro_de_carnet;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if ($paciente->sexo == 'M') {
 
-            }
             return $this->redirect(['control', 'peso' => $model->peso, 'talla' => $model->talla, 'paciente_id' => $id]);
         } else {
+
             return $this->render('create', [
                 'model' => $model, 'valorespeso' => $valores, 'valorestalla' => $valoresT, 'sexo' => $paciente->sexo
             ]);

@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
         //'language' => 'ru',
         'dateFormat' => 'yyyy-MM-dd',
     ]) ?>
-    <?= $form->field($model, 'id_paciente')->dropDownList($listan) ?>
+<!--    --><?php //echo $form->field($model, 'id_paciente')->dropDownList($listan) ?>
 
     <?= $form->field($model, 'id_personal')->dropDownList($listap) ?>
 
