@@ -48,9 +48,9 @@ class AiepiController extends \yii\web\Controller
         $TB = 0;
         $TN = 0;
         /////////////
-        $Ob=rand(0,10);
+        $Ob=rand(0,25);
         $SO=rand(0,10);
-        $NO=rand(0,10);
+        $NO=rand(0,40);
         $DC=rand(0,10);
         $TN=$Ob+$NO+$SO+$DC;
         $model = new AiepiForm();
