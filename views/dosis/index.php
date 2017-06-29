@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Vacuna;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
@@ -29,9 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'meses_minimo',
             'meses_maximo',
             'id_vacuna',
-            // 'id_metodo',
-
-            ['class' => 'yii\grid\ActionColumn'],
+//             'id_metodo',
+//            [
+//                'attribute'=> 'Vacuna',
+//                'value'=>function($model,$key){
+//                    return Vacuna::findOne(['id_vacuna'=>$model->id_vacuna])->nombre;
+//                }
+//            ],
+            ['class' => 'yii\grid\ActionColumn','template'=>' {view}{update}'],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

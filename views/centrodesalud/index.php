@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'direccion',
             'telefono',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{update}{view}'],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

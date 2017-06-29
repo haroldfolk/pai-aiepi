@@ -31,11 +31,24 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     /**
      * @inheritdoc
      */
+//    public static function findIdentity($id)
+//    {
+//        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+//    }
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        //select * from Usuarios where id=$id
+        $u = Usuario::find()->where(['id' => $id])->one();
+        if (isset($u)) {
+            $usuarioLogueado = new User();
+            $usuarioLogueado->username = $u->nick;
+            $usuarioLogueado->password = $u->clave;
+            $usuarioLogueado->id = $u->id;
+            return new static($usuarioLogueado);
+        } else {
+            return null;
+        }
     }
-
     /**
      * @inheritdoc
      */
@@ -56,17 +69,34 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      * @param string $username
      * @return static|null
      */
+//    public static function findByUsername($username)
+//    {
+//        foreach (self::$users as $user) {
+//            if (strcasecmp($user['username'], $username) === 0) {
+//                return new static($user);
+//            }
+//        }
+//
+//        return null;
+//    }
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
+//        foreach (self::$users as $user) {
+//            if (strcasecmp($user['username'], $username) === 0) {
+//                return new static($user);
+//            }
+//        }
+        $usuarioDB = Usuario::find()->where(['nick' => $username])->one();
+        if (isset($usuarioDB)) {
+            $usuarioLogueado = new User();
+            $usuarioLogueado->username = $usuarioDB->nick;
+            $usuarioLogueado->password = $usuarioDB->clave;
+            $usuarioLogueado->id = $usuarioDB->id;
+            return $usuarioLogueado;
         }
 
         return null;
     }
-
     /**
      * @inheritdoc
      */
@@ -74,7 +104,10 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     {
         return $this->id;
     }
-
+    public static function getIdPersonal($id)
+    {
+        return Usuario::findOne(['id'=>$id])->id_personal;
+    }
     /**
      * @inheritdoc
      */
@@ -99,6 +132,6 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === crypt($this->username,$this->username);
     }
 }

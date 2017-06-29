@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Paciente */
 
-$this->title = $model->id_paciente;
+$this->title = $model->nombre;
 $this->params['breadcrumbs'][] = ['label' => 'Pacientes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id_paciente], ['class' => 'btn btn-primary']) ?>
+
 
     </p>
 
@@ -30,5 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_centro',
         ],
     ]) ?>
-<h2>Nro Carnet de Vacunacion: <?=$carnet?></h2>
+<h2 class="alert alert-success">Este es su Nro Carnet de Vacunacion: <?=$carnet?></h2>
+    <?= Html::a('Volver al inicio', ['/site'], ['class' => 'btn btn-primary']) ?>
 </div>

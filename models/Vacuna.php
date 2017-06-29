@@ -33,7 +33,7 @@ class Vacuna extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'nro_dosis', 'unidad_de_medida'], 'required'],
-            [['nro_dosis', 'id_metodo'], 'integer'],
+            [['nro_dosis'/*, 'id_metodo'*/], 'integer'],
             [['nombre', 'descripcion'], 'string', 'max' => 50],
             [['unidad_de_medida'], 'string', 'max' => 5],
         ];
@@ -50,7 +50,7 @@ class Vacuna extends \yii\db\ActiveRecord
             'nro_dosis' => Yii::t('app', 'Nro Dosis'),
             'unidad_de_medida' => Yii::t('app', 'Unidad De Medida'),
             'descripcion' => Yii::t('app', 'Descripcion'),
-            'id_metodo' => Yii::t('app', 'Id Metodo'),
+//            'id_metodo' => Yii::t('app', 'Id Metodo'),
         ];
     }
 

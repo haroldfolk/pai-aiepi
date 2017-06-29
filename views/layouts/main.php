@@ -37,43 +37,49 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'cadena de frio', 'url' => ['/cadenafrio']],
-            ['label' => 'Todo sobre vacunas', 'items'=>[
-                    ['label' => 'metododeaplicacion', 'url' => ['/metodoaplicacion']],
-                    ['label' => 'vacuna', 'url' => ['/vacuna']],
-                    ['label' => 'rango de edad', 'url' => ['/rangoedad']],
+
+            ['label' => 'Centro de Salud', 'items' => [
+                ['label' => 'Cadena de Frio', 'url' => ['/cadenafrio']],
+                ['label' => 'Registrar Refrigerador', 'url' => ['/refrigerador']],
+                ['label' => 'Gestionar Personal', 'url' => ['/personal']],
+                ['label' => 'Consultar Cuaderno AIEPI', 'url' => ['/aiepi']],
+                ['label' => 'Consultar libros PAI', 'url' => ['/pai']],
+            ],],
+                ['label' => 'Administracion y Cadena de Frio', 'items' => [
+                    ['label' => 'Registrar Centro de Salud', 'url' => ['/centrodesalud']],
+                    ['label' => 'Registrar metodo de aplicacion', 'url' => ['/metodoaplicacion']],
+                    ['label' => 'Gestionar Vacuna', 'url' => ['/vacuna']],
+                    ['label' => 'Registrar Dosis', 'url' => ['/dosis']],
+                    ['label' => 'Gestionar Usuario', 'url' => ['/usuario']],
+                ],],
+                ['label' => 'Atencion Infantil', 'items' => [
+                    ['label' => 'Gestionar Paciente', 'url' => ['/paciente']],
+                    ['label' => 'Registrar Acto de Vacunacion', 'url' => ['/actovacunacion']],
+                    ['label' => 'Realizar control nutricional', 'url' => ['/controlnutricional']],
+
                 ],],
 
-            ['label' => 'refrigerador', 'url' => ['/refrigerador']],
-            ['label' => 'centrodesalud', 'url' => ['/centrodesalud']],
-            ['label' => 'personal', 'url' => ['/personal']],
-            ['label' => 'paciente', 'url' => ['/paciente']],
-            ['label' => 'controlnutricional', 'url' => ['/controlnutricional']],
-//            ['label' => 'actodevacunacion', 'url' => ['/actovacunacion']],
-            ['label' => 'Home', 'url' => ['/site/index']],
-//            ['label' => 'About', 'url' => ['/site/about']],
-//            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
+                Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
+                ) : (
+                    '<li>'
+                    . Html::beginForm(['/site/logout'], 'post')
+                    . Html::submitButton(
+                        'Logout (' . Yii::$app->user->identity->username . ')',
+                        ['class' => 'btn btn-link logout']
+                    )
+                    . Html::endForm()
+                    . '</li>'
                 )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
+            ],
+            ]);
     NavBar::end();
     ?>
 
     <div class="container">
-<!--        --><?php //echo Breadcrumbs::widget([
-//            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-//        ]) ?>
+        <!--        --><?php //echo Breadcrumbs::widget([
+        //            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        //        ]) ?>
         <?= $content ?>
     </div>
 </div>
@@ -82,7 +88,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; SQS Salces Calidad en Software <?= date('Y') ?></p>
 
-        <p class="pull-right"><?='Taller de Grado '. date('Y') ?></p>
+        <p class="pull-right"><?= 'Taller de Grado ' . date('Y') ?></p>
     </div>
 </footer>
 

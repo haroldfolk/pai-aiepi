@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\CentroDeSalud;
 use app\models\Personal;
 use app\models\Refrigerador;
+use app\models\User;
+use app\models\Usuario;
 use Yii;
 use app\models\CadenaDeFrio;
 use yii\data\ActiveDataProvider;
@@ -38,13 +41,14 @@ class CadenafrioController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => CadenaDeFrio::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->redirect(['create']);
+//        $dataProvider = new ActiveDataProvider([
+//            'query' => CadenaDeFrio::find(),
+//        ]);
+//
+//        return $this->render('index', [
+//            'dataProvider' => $dataProvider,
+//        ]);
     }
 
     /**
@@ -54,8 +58,20 @@ class CadenafrioController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        if ($model->temperatura < 2) {
+            $mensaje = 'Las vacunas corren peligro por temperatura baja. Notifique a su supervisor';
+
+        } elseif ($model->temperatura > 8) {
+
+            $mensaje = 'Las vacunas corren peligro por temperatura alta. Notifique a su supervisor';
+        } else {
+
+            $mensaje = "Temperatura dentro del rango de temperatura normal";
+        }
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model, 'mensaje' => $mensaje
+
         ]);
     }
 
@@ -64,18 +80,28 @@ class CadenafrioController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+
+
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        } else {
+            $idUser = Yii::$app->getUser()->id;
+            $personal = Personal::find()->where(['id_personal' => Usuario::findOne(['id' => $idUser])->id_personal])->all();
+            $listap = ArrayHelper::map($personal, 'id_personal', 'nombre');
+
+        }
         $model = new CadenaDeFrio();
-        $refrigerador = Refrigerador::find()->all();
-            $listar=ArrayHelper::map($refrigerador,'id_refrigerador','modelo');
-        $personal=Personal::find()->all();
-        $listap=ArrayHelper::map($personal,'id_personal','nombre');
+        $centro = CentroDeSalud::findOne(['id_centro' => Personal::findOne(['id_personal' => User::getIdPersonal($idUser)])]);
+        $refrigerador = Refrigerador::find()->where(['id_centro' => $centro->id_centro])->all();
+        $listar = ArrayHelper::map($refrigerador, 'id_refrigerador', 'modelo');
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->nro_control]);
         } else {
             return $this->render('create', [
-                'model' => $model,'listar'=>$listar,'listap'=>$listap
+                'model' => $model, 'listar' => $listar, 'listap' => $listap
             ]);
         }
     }
@@ -127,4 +153,5 @@ class CadenafrioController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

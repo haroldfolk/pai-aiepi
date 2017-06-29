@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Cargo;
 use app\models\CentroDeSalud;
+use app\models\Usuario;
 use Yii;
 use app\models\Personal;
 use yii\data\ActiveDataProvider;
@@ -72,7 +73,18 @@ class PersonalController extends Controller
         $cargo = Cargo::find()->all();
         $listacargo=ArrayHelper::map($cargo,'id_cargo','nombre');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_personal]);
+            $usuarioNuevo=new Usuario();
+            $usuarioNuevo->id_personal=$model->id_personal;
+            $usuarioNuevo->nick=''.$model->id_personal.'';
+//            $usuarioNuevo->clave=$model->nombre;
+            $usuarioNuevo->clave=crypt($model->id_personal,$model->id_personal);
+            $usuarioNuevo->role=$model->id_cargo;
+//            print_r($usuarioNuevo);exit();
+            if($usuarioNuevo->save()){
+                return $this->redirect(['view', 'id' => $model->id_personal]);
+            }else{
+                print_r($usuarioNuevo);exit();
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,'listacargo'=>$listacargo,'listacentro'=>$listacentro
@@ -110,6 +122,8 @@ class PersonalController extends Controller
      */
     public function actionDelete($id)
     {
+        $usuarioDelete=Usuario::find()->where(['id_personal'=>$id])->one();
+        $usuarioDelete->delete();
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

@@ -18,7 +18,7 @@ class VacunaSearch extends Vacuna
     public function rules()
     {
         return [
-            [['id_vacuna', 'nro_dosis', 'id_metodo'], 'integer'],
+            [['id_vacuna', 'nro_dosis'/*, 'id_metodo'*/], 'integer'],
             [['nombre', 'unidad_de_medida', 'descripcion'], 'safe'],
         ];
     }
@@ -61,7 +61,7 @@ class VacunaSearch extends Vacuna
         $query->andFilterWhere([
             'id_vacuna' => $this->id_vacuna,
             'nro_dosis' => $this->nro_dosis,
-            'id_metodo' => $this->id_metodo,
+//            'id_metodo' => $this->id_metodo,
         ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])

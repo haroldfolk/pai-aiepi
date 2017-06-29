@@ -26,12 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id_vacuna',
             'nombre',
-            'nro_dosis',
+//            'nro_dosis',
             'unidad_de_medida',
-            'descripcion',
+            'descripcion:text:Descripcion de la Vacuna',
             // 'id_metodo',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{view} {update}'],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

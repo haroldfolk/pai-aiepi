@@ -3,6 +3,9 @@
 namespace app\controllers;
 
 use app\models\CentroDeSalud;
+use app\models\Personal;
+use app\models\User;
+use app\models\Usuario;
 use Yii;
 use app\models\Refrigerador;
 use yii\data\ActiveDataProvider;
@@ -65,14 +68,21 @@ class RefrigeradorController extends Controller
      */
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        } else {
+            $idUser = Yii::$app->getUser()->id;
+        }
+
+        $centro = CentroDeSalud::findOne(['id_centro' => Personal::findOne(['id_personal' => User::getIdPersonal($idUser)])]);
         $model = new Refrigerador();
-        $centro = CentroDeSalud::find()->all();
-        $lista=ArrayHelper::map($centro,'id_centro','nombre');
+        $model->id_centro = $centro->id_centro;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_refrigerador]);
         } else {
             return $this->render('create', [
-                'model' => $model,'lista'=>$lista
+                'model' => $model
             ]);
         }
     }

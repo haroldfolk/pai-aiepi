@@ -7,10 +7,11 @@ use Yii;
 /**
  * This is the model class for table "usuario".
  *
- * @property integer $id_usuario
+ * @property integer $id
  * @property string $nick
  * @property string $clave
  * @property integer $id_personal
+ * @property string $role
  *
  * @property Personal $idPersonal
  * @property UsuarioPermiso[] $usuarioPermisos
@@ -34,7 +35,8 @@ class Usuario extends \yii\db\ActiveRecord
         return [
             [['nick', 'clave'], 'required'],
             [['id_personal'], 'integer'],
-            [['nick', 'clave'], 'string', 'max' => 20],
+            [['nick', 'clave'], 'string', 'max' => 100],
+            [['role'], 'string', 'max' => 50],
             [['id_personal'], 'exist', 'skipOnError' => true, 'targetClass' => Personal::className(), 'targetAttribute' => ['id_personal' => 'id_personal']],
         ];
     }
@@ -45,10 +47,11 @@ class Usuario extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_usuario' => 'Id Usuario',
-            'nick' => 'Nick',
-            'clave' => 'Clave',
-            'id_personal' => 'Id Personal',
+            'id' => Yii::t('app', 'ID'),
+            'nick' => Yii::t('app', 'Nick'),
+            'clave' => Yii::t('app', 'Clave'),
+            'id_personal' => Yii::t('app', 'Id Personal'),
+            'role' => Yii::t('app', 'Role'),
         ];
     }
 
@@ -65,7 +68,7 @@ class Usuario extends \yii\db\ActiveRecord
      */
     public function getUsuarioPermisos()
     {
-        return $this->hasMany(UsuarioPermiso::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(UsuarioPermiso::className(), ['id_usuario' => 'id']);
     }
 
     /**
@@ -73,6 +76,6 @@ class Usuario extends \yii\db\ActiveRecord
      */
     public function getIdPermisos()
     {
-        return $this->hasMany(Permiso::className(), ['id_permiso' => 'id_permiso'])->viaTable('usuario_permiso', ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(Permiso::className(), ['id_permiso' => 'id_permiso'])->viaTable('usuario_permiso', ['id_usuario' => 'id']);
     }
 }
